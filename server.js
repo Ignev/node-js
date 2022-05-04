@@ -1,4 +1,5 @@
 const express = require("express");
+
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
@@ -6,23 +7,23 @@ const postRouter = require('./routes/post-routes');
 const contactRouters = require('./routes/contact-routers');
 const postApiRouter = require("./routes/api-post-routes");
 const createPath = require('./helper/create-path');
-
+const chalk = require("chalk");
+require('dotenv').config()
+const errorMsg = chalk.bgKeyword('white').redBright;
+const successMsg = chalk.bgKeyword('green').white;
 const app = express();
 
 app.set("view engine", "ejs");
-const PORT = 3000;
-const db =
-  "mongodb+srv://Evgeny:Pass321@cluster0.dl5ga.mongodb.net/node-blog?retryWrites=true&w=majority";
 
 mongoose
-  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((res) => console.log("Connected to DB"))
-  .catch((error) => console.log(error));
+  .connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((res) => console.log(successMsg("Connected to DB")))
+  .catch((error) => console.log(errorMsg(error)));
 
 
 
-app.listen(PORT, "localhost", (error) => {
-  error ? console.log(error) : console.log("Listening server");
+app.listen(process.env.PORT, "localhost", (error) => {
+  error ? console.log(errorMsg(error)) : console.log(successMsg("Listening server"));
 });
 
 app.use(
